@@ -15,9 +15,9 @@ class NewsCollection implements SeekableIterator, Countable
     public function hydrate(array $news_collection)
     {
         $this->_position = 0;
-        foreach ($news_collection as $news) {
+        foreach ($news_collection as $single_news_data) {
             try {
-                $this->_news_collection[] = self::setNewsIteration($news);
+                $this->_news_collection[] = self::setNewsIteration($single_news_data);
             } catch (Exception $e) {
                 echo 'Exception rencontrée. Message d\'erreur : ', $e->getMessage() . '<br>';
             }
@@ -27,12 +27,12 @@ class NewsCollection implements SeekableIterator, Countable
     /*
      * Cette méthode va contrôler les données avant hydratation
      */
-    private function setNewsIteration($news)
+    private function setNewsIteration($single_news_data)
     {
-        if (!is_array($news)) {
+        if (!is_array($single_news_data)) {
             throw new ScorerException ('Cette entrée n\'est pas un tableau !');
         }
-        // todo : d'autres contrôles ici
+        $news = new News($single_news_data);
 
         return $news;
     }
@@ -49,37 +49,43 @@ class NewsCollection implements SeekableIterator, Countable
 
     public function current()
     {
-        // TODO: Implement current() method.
+        return $this->_news_collection[$this->_position];
     }
 
     public function next()
     {
-        // TODO: Implement next() method.
+        $this->_position++;
     }
 
     public function key()
     {
-        // TODO: Implement key() method.
+        return $this->_position;
     }
 
     public function valid()
     {
-        // TODO: Implement valid() method.
+        return isset($this->_news_collection[$this->_position]);
     }
 
     public function rewind()
     {
-        // TODO: Implement rewind() method.
+        $this->_position = 0;
     }
 
     public function count()
     {
-        // TODO: Implement count() method.
+        return count($this->_news_collection);
     }
 
     public function seek($position)
     {
-        // TODO: Implement seek() method.
+        $old_position = $this->_position;
+        $this->_position = $position;
+
+        if (!$this->valid()) {
+            trigger_error('La position spécifiée n\'est pas valide', E_USER_WARNING);
+            $this->_position = $old_position;
+        }
     }
 
     /*

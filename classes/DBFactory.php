@@ -6,9 +6,10 @@ class DBFactory
 
     public static function getPDOConnection()
     {
-        $database = new PDO('mysql:host='.DB_HOST.';dbname='.DB_NAME.'', DB_HOST, '');
-        $database->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        return $database;
+        $connection = new PDO('mysql:host=' . DB_HOST . ';dbname=' . DB_NAME . ';',
+            DB_USER, DB_PASS);
+        $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        return $connection;
     }
 
     public static function getMySqliConnection()

@@ -11,6 +11,7 @@ setlocale(LC_TIME, 'fr_FR.utf8', 'fra');
 /* ligne LOCALE */
 define ('SITEROOT', $_SERVER['DOCUMENT_ROOT'].'/TP_news/');
 define('LINK_BASE_URL', 'http://'.$_SERVER['HTTP_HOST'].'/TP_news/');
+define ('CSS_PATH', LINK_BASE_URL . 'static/');
 /* fin ligne LOCALE */
 
 // bd access

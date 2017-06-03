@@ -5,10 +5,12 @@ include_once '../config/local.php';
 
 spl_autoload_register('autoload');
 
-
+$db_factory = new DBFactory;
+$db = $db_factory->getPDOConnection();
+$news_manager = new NewsManagerPDO($db);
 
 function autoload($classe)
 {
-    require 'classes/' . $classe . '.php'; // On inclut la classe correspondante au paramètre passé.
+    require '../classes/' . $classe . '.php'; // On inclut la classe correspondante au paramètre passé.
 }
 

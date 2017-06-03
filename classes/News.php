@@ -83,7 +83,7 @@ class News
      */
     public function setTitre($titre)
     {
-        $this->_titre = $titre;
+        $this->_titre = utf8_encode($titre);
     }
 
     /**
@@ -102,21 +102,12 @@ class News
         $this->_contenu = $contenu;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getDateAjout()
-    {
-        return $this->_dateAjout;
-    }
-
-    /**
-     * @param mixed $dateAjout
-     */
     public function setDateAjout($dateAjout)
     {
         $this->_dateAjout = $dateAjout;
     }
+
+
 
     /**
      * @return mixed
@@ -126,9 +117,6 @@ class News
         return $this->_dateModif;
     }
 
-    /**
-     * @param mixed $dateModif
-     */
     public function setDateModif($dateModif)
     {
         $this->_dateModif = $dateModif;
