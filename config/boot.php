@@ -2,6 +2,7 @@
 
 // lecture des variables d'environnement
 include_once '../config/local.php';
+include_once '../traits/tools.php';
 
 spl_autoload_register('autoload');
 

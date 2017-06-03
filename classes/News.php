@@ -2,6 +2,8 @@
 
 class News
 {
+    use frenchDates;
+
     private
         $_id,
         $_auteur,
@@ -86,11 +88,17 @@ class News
         $this->_titre = utf8_encode($titre);
     }
 
+
     /**
-     * @return mixed
+     * @param int $max_lenght : La longueur de texte à retourner
+     * @return string : le contenu tronqué ou non
      */
-    public function getContenu()
+    public function getContenu($max_lenght = -1)
     {
+        if ($max_lenght > 1)
+        {
+            return (substr($this->_contenu, 0, 200).'...');
+        }
         return $this->_contenu;
     }
 
@@ -107,14 +115,21 @@ class News
         $this->_dateAjout = $dateAjout;
     }
 
-
+    /**
+     * @return mixed
+     */
+    public function getDateAjout()
+    {
+        return $this->frenchDate($this->_dateAjout);
+    }
+    
 
     /**
      * @return mixed
      */
     public function getDateModif()
     {
-        return $this->_dateModif;
+        return $this->frenchDate($this->_dateModif);
     }
 
     public function setDateModif($dateModif)

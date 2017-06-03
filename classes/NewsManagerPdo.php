@@ -55,7 +55,7 @@ class NewsManagerPDO extends NewsManager
     {
         $query = '
           SELECT id, auteur, titre, contenu, dateAjout, dateModif 
-          FROM news ORDER BY id DESC';
+          FROM news ORDER BY dateAjout DESC';
 
         // On vérifie l'intégrité des paramètres fournis.
         if ($limit != -1 || $offset != -1)
