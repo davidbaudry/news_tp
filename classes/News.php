@@ -34,8 +34,6 @@ class News
 
 
 
-
-
     /*
      * GETTERS AND SETTERS
      */
