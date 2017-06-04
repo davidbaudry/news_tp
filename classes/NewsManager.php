@@ -12,23 +12,13 @@ abstract class NewsManager
 
     abstract protected function update(News $news);
 
-    abstract public function delete($id);
+    abstract protected function delete($id);
 
-    /*
-     * Persist a news
-     */
-    public function persist(News $news)
-    {
-        if ($news->isValid()) {
-            $news->isNew() ? $this->add($news) : $this->update($news);
-        } else {
-            throw new RuntimeException('Invalid news');
-        }
-    }
+    abstract protected function persist(News $news);
 
-    abstract public function getNewsById($id);
+    abstract protected function getNewsById($id);
 
-    abstract public function getCollection($limit = -1, $offset = -1);
+    abstract protected function getCollection($limit = -1, $offset = -1);
 
 
 

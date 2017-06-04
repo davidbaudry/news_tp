@@ -13,17 +13,38 @@ class NewsManagerPDO extends NewsManager
 
     protected function create(News $news)
     {
-        // TODO: Implement create() method.
+        $query = $this->_database_instance->prepare('
+            INSERT INTO news(auteur, titre, contenu, dateAjout, dateModif) 
+            VALUES(:auteur, :titre, :contenu, NOW(), NOW())');
+        $query->bindValue(':titre', $news->getTitre());
+        $query->bindValue(':auteur', $news->getAuteur());
+        $query->bindValue(':contenu', $news->getContenu());
+        if($query->execute()) {
+            // on renvoit le dernier id en database
+            return $this->_database_instance->lastInsertId();
+        }
+        return false;
     }
 
     protected function update(News $news)
     {
-        // TODO: Implement update() method.
+        $query = $this->_database_instance->prepare('
+            UPDATE news 
+            SET auteur = :auteur, titre = :titre, contenu = :contenu, dateModif = NOW() 
+            WHERE id = :id');
+        $query->bindValue(':titre', $news->getTitre());
+        $query->bindValue(':auteur', $news->getAuteur());
+        $query->bindValue(':contenu', $news->getContenu());
+        $query->bindValue(':id', $news->getId(), PDO::PARAM_INT);
+        if($query->execute()) {
+            return true;
+        }
+        return false;
     }
 
-    public function delete($id)
+    public function delete($news_id)
     {
-        // TODO: Implement delete() method.
+        return ($this->_database_instance->exec('DELETE FROM news WHERE id = '.(int) $news_id));
     }
 
     public function getNewsById($news_id)
@@ -49,6 +70,30 @@ class NewsManagerPDO extends NewsManager
         */
 
         return $my_news;
+    }
+
+    /*
+     * Persist a news
+     */
+    public function persist(News $news)
+    {
+        var_dump($news->isValid());
+        var_dump($news->isNew());
+        if ($news->isValid()) {
+            if ($news->isNew()) {
+                // la methode create renverra l'id de la dernière entrée en database
+                $news_id = $this->create($news);
+            } else {
+                $this->update($news);
+                // en cas d'update l'id ne change pas
+                $news_id = $news->getId();
+            }
+        } else {
+            throw new RuntimeException('Invalid news in persist');
+            return false;
+        }
+        // pour terminer on renvoi l'objet reconstruit
+        return $this->getNewsById($news_id);
     }
 
     public function getCollection($limit = -1, $offset = -1)

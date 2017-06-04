@@ -34,7 +34,22 @@ class News
         }
     }
 
+    public function isNew()
+    {
+        if (empty($this->getId())){
+            return true;
+        }
+        return false;
+    }
 
+
+    public function isValid()
+    {
+        if (empty($this->getAuteur()) || empty($this->getTitre()) || empty($this->getContenu())) {
+            return false;
+        }
+        return true;
+    }
 
     /*
      * GETTERS AND SETTERS

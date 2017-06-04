@@ -19,6 +19,7 @@ include 'template_head.php';
 ?>
 <div class="container">
     <h1>Votre news en détail</h1>
+    <a href="home.php">Revenir à la home</a>
     <?php
     // recherche d'un id passé en paramètre
     if (isset($_GET['news_id']) && (int)$_GET['news_id'] > 0) {
@@ -43,11 +44,14 @@ include 'template_head.php';
         </div>
         <div class="panel-body">
             <p><?php echo $news->getContenu($longueur_de_texte = -1); ?></p>
-                <span class="small">
+            <span class="small">
                     News du : <?php echo $news->getDateAjout(); ?>
-                    Dernière modif : <?php echo $news->getDateModif(); ?>
-                    Auteur : <?php echo $news->getAuteur(); ?>
+                Dernière modif : <?php echo $news->getDateModif(); ?>
+                Auteur : <?php echo $news->getAuteur(); ?>
                 </span>
+            <br>
+            <a class="btn btn-xs btn-primary"
+               href="administration.php?news_id=<?php echo $news->getId(); ?>">Modifier</a>
         </div>
     </div>
     <a href="home.php">Revenir à la home</a>

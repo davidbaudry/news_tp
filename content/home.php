@@ -16,7 +16,7 @@ include 'template_head.php';
 ?>
 <div class="container">
     <h1>Bienvenue sur nos news !</h1>
-
+    <a href="administration.php">Aller à l'administration</a>
 
     <?php
 
