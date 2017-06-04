@@ -9,6 +9,7 @@ include '../config/boot.php';
  */
 include 'template_head.php';
 
+
 /*
  * Début du contenu
  */
@@ -27,7 +28,6 @@ if (isset($_POST['action'])) {
             ]
         );
         $news = $news_manager->persist($news);
-
     } else {
         if ($_POST['action'] == 'Ajouter') {
             // create
@@ -55,16 +55,31 @@ if (isset($_POST['action'])) {
             }
         }
     }
+} else {
+    if (isset($_GET['news_id']) && ((int)$_GET['news_id'] > 0)) {
+        // on vérifie si on a passé des variables en get
+        // construction de l'objet
+        $news = $news_manager->getNewsById((int)$_GET['news_id']);
+    }
 }
 
-// sinon vérification du passage par get (demande de modif de la news)
-if (isset($_GET['news_id']) && ((int)$_GET['news_id'] > 0)) {
-    echo 'mod from url';
-    $mode = 'update';
-    // construction de l'objet
-    $news = $news_manager->getNewsById((int)$_GET['news_id']);
+// controle avant formulaire
+if (isset($news)) {
+    if (!is_object($news)) {
+        ?>
+        <div class="alert alert-danger" role="alert">
+            <strong>Problème !</strong>
+            La news n'a pas été trouvée ou enregistrée.
+        </div>';
+        <?php
+        $news = null;
+        $form_title = 'Ajout de news';
+    } else {
+        $form_title = 'Mise à jour de news';
+    }
+} else {
+    $form_title = 'Ajout de news';
 }
-
 ?>
 <div class="container">
     <h1>Administration des news</h1>
@@ -76,7 +91,8 @@ if (isset($_GET['news_id']) && ((int)$_GET['news_id'] > 0)) {
         echo ' | <a href="administration.php">Créer une nouvelle news</a>';
     }
     ?>
-
+    <hr/>
+    <h2><?php echo $form_title; ?></h2>
     <form action="administration.php" method="post">
 
         <label for="auteur">Auteur : </label>
@@ -95,7 +111,7 @@ if (isset($_GET['news_id']) && ((int)$_GET['news_id'] > 0)) {
                } ?>"/>
         <br/>
 
-        <label for="contenu">Contenu :</label>
+        <label>Contenu :</label>
         <br/>
         <textarea rows="5" cols="42" name="contenu"><?php if (isset($news)) {
                 echo $news->getContenu();
@@ -152,5 +168,3 @@ if (isset($_GET['news_id']) && ((int)$_GET['news_id'] > 0)) {
         ?>
     </table>
 </div>
-</body>
-</html>

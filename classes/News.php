@@ -2,7 +2,7 @@
 
 class News
 {
-    use frenchDates;
+    use tools;
 
     private
         $_id,
@@ -15,9 +15,13 @@ class News
     /**
      * News constructor.
      */
-    public function __construct(array $news_data)
+    public function __construct($news_data)
     {
+        if (!is_array($news_data)) {
+            return false;
+        }
         $this->hydrate($news_data);
+        return true;
     }
 
     /*
@@ -151,7 +155,4 @@ class News
     {
         $this->_dateModif = $dateModif;
     }
-
-
-
 }

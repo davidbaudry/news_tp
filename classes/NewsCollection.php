@@ -11,7 +11,6 @@ class NewsCollection implements SeekableIterator, Countable
         self::hydrate($news_collection);
     }
 
-
     public function hydrate(array $news_collection)
     {
         $this->_position = 0;
@@ -30,17 +29,16 @@ class NewsCollection implements SeekableIterator, Countable
     private function setNewsIteration($single_news_data)
     {
         if (!is_array($single_news_data)) {
-            throw new ScorerException ('Cette entrée n\'est pas un tableau !');
+            throw new Exception ('Cette entrée n\'est pas un tableau !');
         }
         $news = new News($single_news_data);
 
         return $news;
     }
 
-
     function __unset($name)
     {
-        // TODO: Implement __unset() method.
+        unset($this);
     }
 
     /*
@@ -87,12 +85,6 @@ class NewsCollection implements SeekableIterator, Countable
             $this->_position = $old_position;
         }
     }
-
-    /*
-     * Getters & Setters
-     */
-
-
 
 
 }

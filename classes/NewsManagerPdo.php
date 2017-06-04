@@ -10,7 +10,6 @@ class NewsManagerPDO extends NewsManager
         $this->_database_instance = $database_instance;
     }
 
-
     protected function create(News $news)
     {
         $query = $this->_database_instance->prepare('
@@ -19,7 +18,7 @@ class NewsManagerPDO extends NewsManager
         $query->bindValue(':titre', $news->getTitre());
         $query->bindValue(':auteur', $news->getAuteur());
         $query->bindValue(':contenu', $news->getContenu());
-        if($query->execute()) {
+        if ($query->execute()) {
             // on renvoit le dernier id en database
             return $this->_database_instance->lastInsertId();
         }
@@ -36,7 +35,7 @@ class NewsManagerPDO extends NewsManager
         $query->bindValue(':auteur', $news->getAuteur());
         $query->bindValue(':contenu', $news->getContenu());
         $query->bindValue(':id', $news->getId(), PDO::PARAM_INT);
-        if($query->execute()) {
+        if ($query->execute()) {
             return true;
         }
         return false;
@@ -44,7 +43,7 @@ class NewsManagerPDO extends NewsManager
 
     public function delete($news_id)
     {
-        return ($this->_database_instance->exec('DELETE FROM news WHERE id = '.(int) $news_id));
+        return ($this->_database_instance->exec('DELETE FROM news WHERE id = ' . (int)$news_id));
     }
 
     public function getNewsById($news_id)
@@ -55,21 +54,16 @@ class NewsManagerPDO extends NewsManager
           FROM news 
           WHERE id = :id
         ');
-        $query->bindValue('id', (int) $news_id, PDO::PARAM_INT);
+        $query->bindValue('id', (int)$news_id, PDO::PARAM_INT);
         $query->execute();
         $news_data = $query->fetch(PDO::FETCH_ASSOC);
         // instanciation de l'objet news
         $my_news = new News($news_data);
 
-        /* TODO : Débogger ce bout :
-         * On demande à PDO de transformer le résultat en objet, ici news
-         * FETCH_PROPS_LATE assure qu'on fait les choses dans l'ordre : Construction (de l'objet) puis hydratation
-         * (sans FETCH_PROPS_LATE l'objet serait hydraté par PDO avant même que le constructeur ne soit appelé
-        $query->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'News');
-        $my_news = $query->fetch();
-        */
-
-        return $my_news;
+        if ($my_news->isValid()) {
+            return $my_news;
+        }
+        return false;
     }
 
     /*
@@ -77,8 +71,6 @@ class NewsManagerPDO extends NewsManager
      */
     public function persist(News $news)
     {
-        var_dump($news->isValid());
-        var_dump($news->isNew());
         if ($news->isValid()) {
             if ($news->isNew()) {
                 // la methode create renverra l'id de la dernière entrée en database
@@ -88,12 +80,9 @@ class NewsManagerPDO extends NewsManager
                 // en cas d'update l'id ne change pas
                 $news_id = $news->getId();
             }
-        } else {
-            throw new RuntimeException('Invalid news in persist');
-            return false;
+            return $this->getNewsById($news_id);
         }
-        // pour terminer on renvoi l'objet reconstruit
-        return $this->getNewsById($news_id);
+        return false;
     }
 
     public function getCollection($limit = -1, $offset = -1)
@@ -103,9 +92,8 @@ class NewsManagerPDO extends NewsManager
           FROM news ORDER BY dateAjout DESC';
 
         // On vérifie l'intégrité des paramètres fournis.
-        if ($limit != -1 || $offset != -1)
-        {
-            $query .= ' LIMIT '.(int) $limit.' OFFSET '.(int) $offset;
+        if ($limit != -1 || $offset != -1) {
+            $query .= ' LIMIT ' . (int)$limit . ' OFFSET ' . (int)$offset;
         }
 
         $query = $this->_database_instance->query($query);
@@ -117,6 +105,5 @@ class NewsManagerPDO extends NewsManager
 
         return $news_collection;
     }
-
 
 }

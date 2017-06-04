@@ -48,7 +48,7 @@ include 'template_head.php';
                     News du : <?php echo $news->getDateAjout(); ?>
                 Dernière modif : <?php echo $news->getDateModif(); ?>
                 Auteur : <?php echo $news->getAuteur(); ?>
-                </span>
+            </span>
             <br>
             <a class="btn btn-xs btn-primary"
                href="administration.php?news_id=<?php echo $news->getId(); ?>">Modifier</a>
